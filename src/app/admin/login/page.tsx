@@ -76,9 +76,6 @@ export default function AdminLoginPage() {
             )}
           </button>
         </form>
-        <p className="mt-6 text-center text-xs text-navy-400">
-          Default: admin@on3rdoutreach.org / Admin@2026!
-        </p>
       </div>
     </div>
   );
