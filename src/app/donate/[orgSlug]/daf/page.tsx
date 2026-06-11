@@ -19,7 +19,7 @@ export default async function OrgDAFDonatePage({
 
   return (
     <OrgDonationShell org={org} methodLabel="DAF Grant">
-      <div className="grid gap-12 lg:grid-cols-5">
+      <div className="grid gap-8 lg:grid-cols-5 lg:gap-12">
         <div className="lg:col-span-3">
           <DAFDonationForm organization={org} />
         </div>

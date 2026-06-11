@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getSession } from "@/lib/auth";
-import { getDb } from "@/lib/db";
+import { listDonors } from "@/lib/donations-service";
 import { formatCurrency } from "@/lib/utils";
 import { Bell, Eye } from "lucide-react";
 
@@ -9,27 +9,7 @@ export default async function AdminDonorsPage() {
   const session = await getSession();
   if (!session) redirect("/admin/login");
 
-  const db = getDb();
-  const donors = db
-    .prepare(
-      `SELECT email, first_name, last_name,
-              COUNT(*) as donation_count,
-              COALESCE(SUM(amount), 0) as total_amount,
-              MAX(created_at) as last_donation,
-              MIN(id) as first_donation_id
-       FROM donations
-       GROUP BY email
-       ORDER BY last_donation DESC`
-    )
-    .all() as {
-    email: string;
-    first_name: string;
-    last_name: string;
-    donation_count: number;
-    total_amount: number;
-    last_donation: string;
-    first_donation_id: number;
-  }[];
+  const donors = await listDonors();
 
   return (
     <div className="space-y-6">
@@ -40,8 +20,8 @@ export default async function AdminDonorsPage() {
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
+      <div className="table-responsive rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase tracking-wider text-navy-500">
             <tr>
               <th className="px-4 py-3">Donor</th>

@@ -10,7 +10,7 @@ export default async function AdminDashboardPage() {
   const session = await getSession();
   if (!session) redirect("/admin/login");
 
-  const stats = getAdminStats();
+  const stats = await getAdminStats();
 
   const cards = [
     {
@@ -48,13 +48,13 @@ export default async function AdminDashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         {cards.map((card) => {
           const Icon = card.icon;
           return (
             <div
               key={card.label}
-              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+              className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6"
             >
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-sm font-medium text-navy-500">

@@ -33,8 +33,8 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800 p-6">
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white p-8 shadow-2xl">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800 p-4 sm:p-6">
+      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white p-6 shadow-2xl sm:p-8">
         <div className="mb-8 text-center">
           <Shield className="mx-auto mb-4 h-12 w-12 text-gold-500" />
           <h1 className="text-2xl font-bold text-navy-950">Admin Portal</h1>

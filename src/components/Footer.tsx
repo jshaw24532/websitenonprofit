@@ -23,7 +23,7 @@ export default function Footer() {
             <div className="space-y-2 text-sm text-navy-300">
               <a
                 href={`mailto:${siteConfig.email}`}
-                className="flex items-center gap-2 transition-colors hover:text-gold-400"
+                className="flex items-center gap-2 break-all transition-colors hover:text-gold-400"
               >
                 <Mail className="h-4 w-4 shrink-0" />
                 {siteConfig.email}

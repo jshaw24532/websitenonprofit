@@ -1,4 +1,9 @@
-import { getDb, type FormType, type FormSubmissionRow } from "./db";
+import {
+  getDb,
+  mapFormSubmissionRow,
+  type FormType,
+  type FormSubmissionRow,
+} from "./db";
 import { lookupIp, getClientIp } from "./geoip";
 import { sendEmail } from "./email/sender";
 import {
@@ -17,7 +22,6 @@ export interface FormSubmitInput {
   details?: Record<string, string | undefined>;
 }
 
-// consortium@ may not exist on mail server — fall back to info@
 const consortiumInbox =
   process.env.CONSORTIUM_INBOX || siteConfig.consortiumEmail;
 const adminInbox: Record<FormType, string> = {
@@ -33,37 +37,24 @@ const formLabels: Record<FormType, string> = {
 };
 
 export async function submitForm(input: FormSubmitInput, request: Request) {
-  const db = getDb();
+  const sql = await getDb();
   const referenceId = `FRM-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
   const ip = getClientIp(request);
   const geo = await lookupIp(ip);
 
-  const result = db
-    .prepare(
-      `INSERT INTO form_submissions (
-        reference_id, form_type, name, email, phone, subject, message, details_json,
-        ip_address, city, region, country, country_code, latitude, longitude
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  const inserted = await sql`
+    INSERT INTO form_submissions (
+      reference_id, form_type, name, email, phone, subject, message, details_json,
+      ip_address, city, region, country, country_code, latitude, longitude
+    ) VALUES (
+      ${referenceId}, ${input.formType}, ${input.name}, ${input.email}, ${input.phone || null},
+      ${input.subject || null}, ${input.message}, ${JSON.stringify(input.details || {})},
+      ${ip}, ${geo.city}, ${geo.region}, ${geo.country}, ${geo.countryCode}, ${geo.latitude}, ${geo.longitude}
     )
-    .run(
-      referenceId,
-      input.formType,
-      input.name,
-      input.email,
-      input.phone || null,
-      input.subject || null,
-      input.message,
-      JSON.stringify(input.details || {}),
-      ip,
-      geo.city,
-      geo.region,
-      geo.country,
-      geo.countryCode,
-      geo.latitude,
-      geo.longitude
-    );
+    RETURNING id
+  `;
 
-  const submissionId = Number(result.lastInsertRowid);
+  const submissionId = Number(inserted[0].id);
   const label = formLabels[input.formType];
 
   const adminEmail = formAdminNotificationEmail({
@@ -86,7 +77,11 @@ export async function submitForm(input: FormSubmitInput, request: Request) {
     html: adminEmail.html,
   });
 
-  if (adminStatus !== "sent" && input.formType === "consortium" && adminTo !== siteConfig.email) {
+  if (
+    adminStatus !== "sent" &&
+    input.formType === "consortium" &&
+    adminTo !== siteConfig.email
+  ) {
     adminTo = siteConfig.email;
     adminStatus = await sendEmail({
       to: adminTo,
@@ -107,36 +102,49 @@ export async function submitForm(input: FormSubmitInput, request: Request) {
     html: autoReply.html,
   });
 
-  db.prepare(
-    `UPDATE form_submissions SET admin_notified = ?, user_notified = ? WHERE id = ?`
-  ).run(
-    adminStatus === "sent" ? 1 : 0,
-    userStatus === "sent" ? 1 : 0,
-    submissionId
-  );
+  await sql`
+    UPDATE form_submissions
+    SET admin_notified = ${adminStatus === "sent"},
+        user_notified = ${userStatus === "sent"}
+    WHERE id = ${submissionId}
+  `;
 
   return { referenceId, submissionId };
 }
 
-export function listFormSubmissions(formType?: FormType) {
-  const db = getDb();
-  if (formType) {
-    return db
-      .prepare(
-        "SELECT * FROM form_submissions WHERE form_type = ? ORDER BY created_at DESC LIMIT 200"
-      )
-      .all(formType) as FormSubmissionRow[];
-  }
-  return db
-    .prepare("SELECT * FROM form_submissions ORDER BY created_at DESC LIMIT 200")
-    .all() as FormSubmissionRow[];
+export async function listFormSubmissions(
+  formType?: FormType
+): Promise<FormSubmissionRow[]> {
+  const sql = await getDb();
+  const rows = formType
+    ? await sql`
+        SELECT * FROM form_submissions
+        WHERE form_type = ${formType}
+        ORDER BY created_at DESC
+        LIMIT 200
+      `
+    : await sql`
+        SELECT * FROM form_submissions
+        ORDER BY created_at DESC
+        LIMIT 200
+      `;
+
+  return rows.map((row) =>
+    mapFormSubmissionRow(row as Record<string, unknown>)
+  );
 }
 
-export function getFormSubmission(id: number): FormSubmissionRow | undefined {
-  const db = getDb();
-  return db
-    .prepare("SELECT * FROM form_submissions WHERE id = ?")
-    .get(id) as FormSubmissionRow | undefined;
+export async function getFormSubmission(
+  id: number
+): Promise<FormSubmissionRow | undefined> {
+  const sql = await getDb();
+  const rows = await sql`
+    SELECT * FROM form_submissions WHERE id = ${id} LIMIT 1
+  `;
+  const row = rows[0];
+  return row
+    ? mapFormSubmissionRow(row as Record<string, unknown>)
+    : undefined;
 }
 
 export function parseFormDetails(row: FormSubmissionRow): Record<string, unknown> {

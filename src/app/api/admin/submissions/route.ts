@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     await requireAdmin();
     const type = request.nextUrl.searchParams.get("type") as FormType | null;
-    const submissions = listFormSubmissions(type || undefined);
+    const submissions = await listFormSubmissions(type || undefined);
     return NextResponse.json({ submissions });
   } catch {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

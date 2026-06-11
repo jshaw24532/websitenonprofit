@@ -36,7 +36,7 @@ export default function OrgDonationShell({
       </div>
 
       <div className="border-b border-navy-100 bg-white">
-        <div className="container-wide flex flex-col gap-4 py-8 sm:flex-row sm:items-center">
+        <div className="container-wide flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:py-8">
           <div
             className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-2xl font-bold text-white"
             style={{ backgroundColor: org.accentColor }}
@@ -53,7 +53,7 @@ export default function OrgDonationShell({
         </div>
       </div>
 
-      <div className="container-wide py-8">
+      <div className="container-wide py-6 sm:py-8">
         <Link
           href={methodLabel ? `/donate/${org.slug}` : "/donate"}
           className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-navy-600 hover:text-navy-950"

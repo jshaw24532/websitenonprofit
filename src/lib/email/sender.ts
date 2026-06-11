@@ -55,10 +55,11 @@ export async function sendEmail(options: {
   }
 
   if (options.donationId && options.emailType) {
-    const db = getDb();
-    db.prepare(
-      `INSERT INTO email_logs (donation_id, email_type, recipient, subject, status) VALUES (?, ?, ?, ?, ?)`
-    ).run(options.donationId, options.emailType, options.to, options.subject, status);
+    const sql = await getDb();
+    await sql`
+      INSERT INTO email_logs (donation_id, email_type, recipient, subject, status)
+      VALUES (${options.donationId}, ${options.emailType}, ${options.to}, ${options.subject}, ${status})
+    `;
   }
 
   return status;

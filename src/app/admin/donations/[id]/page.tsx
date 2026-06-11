@@ -5,7 +5,7 @@ import {
   getDonationById,
   getEmailLogs,
 } from "@/lib/donations-service";
-import { parseDetails, type EmailLogRow } from "@/lib/db";
+import { parseDetails } from "@/lib/db";
 import { formatCurrency } from "@/lib/utils";
 import DonationActions from "@/components/admin/DonationActions";
 import { ArrowLeft, CreditCard, MapPin, Shield } from "lucide-react";
@@ -19,11 +19,11 @@ export default async function AdminDonationDetailPage({
   if (!session) redirect("/admin/login");
 
   const { id } = await params;
-  const donation = getDonationById(parseInt(id, 10));
+  const donation = await getDonationById(parseInt(id, 10));
   if (!donation) notFound();
 
   const details = parseDetails(donation);
-  const emails = getEmailLogs(donation.id) as EmailLogRow[];
+  const emails = await getEmailLogs(donation.id);
 
   return (
     <div className="space-y-6">
@@ -55,8 +55,8 @@ export default async function AdminDonationDetailPage({
         </span>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
+      <div className="grid gap-6 xl:grid-cols-3">
+        <div className="space-y-6 xl:col-span-2">
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h3 className="mb-4 font-bold text-navy-950">Donation Details</h3>
             <dl className="grid gap-3 sm:grid-cols-2 text-sm">

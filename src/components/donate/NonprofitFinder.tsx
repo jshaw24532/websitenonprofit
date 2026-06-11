@@ -165,7 +165,7 @@ export default function NonprofitFinder() {
               placeholder="Search organizations..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-navy-200 bg-white py-3 pl-12 pr-4 text-navy-900 shadow-sm focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
+              className="min-h-[44px] w-full rounded-xl border border-navy-200 bg-white py-3 pl-12 pr-4 text-base text-navy-900 shadow-sm focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20 sm:text-sm"
             />
           </div>
 
@@ -370,7 +370,7 @@ export default function NonprofitFinder() {
                       </span>
                     ))}
                   </div>
-                  <span className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gold-500 py-2.5 text-sm font-semibold text-navy-950 transition-colors group-hover:bg-gold-400">
+                  <span className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-gold-500 py-2.5 text-sm font-semibold text-navy-950 transition-colors group-hover:bg-gold-400">
                     <Heart className="h-4 w-4" />
                     Donate
                   </span>

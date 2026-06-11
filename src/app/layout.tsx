@@ -22,6 +22,12 @@ const sourceSerif = Source_Serif_4({
   display: "swap",
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   title: {
     default: `${siteConfig.consortiumName} | ${siteConfig.shortName}`,

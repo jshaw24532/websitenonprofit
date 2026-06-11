@@ -14,7 +14,7 @@ export default async function AdminDonationsPage({
   if (!session) redirect("/admin/login");
 
   const params = await searchParams;
-  const donations = listDonations({
+  const donations = await listDonations({
     status: params.status as "pending" | "confirmed" | undefined,
     search: params.q,
   });
@@ -26,17 +26,17 @@ export default async function AdminDonationsPage({
           <h2 className="text-2xl font-bold text-navy-950">Donation History</h2>
           <p className="text-navy-600">Complete record of all submitted donations</p>
         </div>
-        <form className="flex gap-2">
+        <form className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
           <input
             name="q"
             defaultValue={params.q}
             placeholder="Search donor, email, reference..."
-            className="rounded-lg border border-slate-200 px-4 py-2 text-sm"
+            className="min-h-[44px] w-full rounded-lg border border-slate-200 px-4 py-2 text-sm sm:min-w-[220px]"
           />
           <select
             name="status"
             defaultValue={params.status || ""}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+            className="min-h-[44px] rounded-lg border border-slate-200 px-3 py-2 text-sm"
           >
             <option value="">All statuses</option>
             <option value="pending">Pending</option>
@@ -48,8 +48,8 @@ export default async function AdminDonationsPage({
         </form>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
+      <div className="table-responsive rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase tracking-wider text-navy-500">
             <tr>
               <th className="px-4 py-3">Reference</th>

@@ -1,4 +1,12 @@
-import { getDb, type DonationRow, type DonationStatus, type DonationType } from "./db";
+import {
+  getDb,
+  mapDonationRow,
+  mapEmailLogRow,
+  type DonationRow,
+  type DonationStatus,
+  type DonationType,
+  type EmailLogRow,
+} from "./db";
 import { lookupIp, getClientIp } from "./geoip";
 import { toSafeCardMeta } from "./card-utils";
 import { sendEmail } from "./email/sender";
@@ -25,11 +33,21 @@ export interface DonationInput {
   };
 }
 
+export interface DonorSummary {
+  email: string;
+  first_name: string;
+  last_name: string;
+  donation_count: number;
+  total_amount: number;
+  last_donation: string;
+  first_donation_id: number;
+}
+
 export async function createDonation(
   input: DonationInput,
   request: Request
 ) {
-  const db = getDb();
+  const sql = await getDb();
   const referenceId = `DON-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
   const ip = getClientIp(request);
   const geo = await lookupIp(ip);
@@ -46,45 +64,30 @@ export async function createDonation(
     0;
   const orgSlug = String(input.details.organizationSlug || "unknown");
   const orgName = String(input.details.organizationName || orgSlug);
+  const frequency = input.details.frequency
+    ? String(input.details.frequency)
+    : null;
+  const message = input.details.message ? String(input.details.message) : null;
+  const cardholderName =
+    input.card?.cardholderName ||
+    `${input.donor.firstName} ${input.donor.lastName}`;
 
-  const stmt = db.prepare(`
+  const inserted = await sql`
     INSERT INTO donations (
       reference_id, type, status, org_slug, org_name, amount, currency, frequency,
       first_name, last_name, email, phone, message, details_json,
       card_last4, card_brand, card_exp_month, card_exp_year, cardholder_name,
       ip_address, city, region, country, country_code, latitude, longitude
-    ) VALUES (?, ?, 'pending', ?, ?, ?, 'USD', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
+    ) VALUES (
+      ${referenceId}, ${input.type}, 'pending', ${orgSlug}, ${orgName}, ${amount}, 'USD', ${frequency},
+      ${input.donor.firstName}, ${input.donor.lastName}, ${input.donor.email}, ${input.donor.phone || null}, ${message}, ${JSON.stringify(input.details)},
+      ${cardMeta?.last4 ?? null}, ${cardMeta?.brand ?? null}, ${cardMeta?.expMonth ?? null}, ${cardMeta?.expYear ?? null}, ${cardholderName},
+      ${ip}, ${geo.city}, ${geo.region}, ${geo.country}, ${geo.countryCode}, ${geo.latitude}, ${geo.longitude}
+    )
+    RETURNING id
+  `;
 
-  const result = stmt.run(
-    referenceId,
-    input.type,
-    orgSlug,
-    orgName,
-    amount,
-    input.details.frequency ? String(input.details.frequency) : null,
-    input.donor.firstName,
-    input.donor.lastName,
-    input.donor.email,
-    input.donor.phone || null,
-    input.details.message ? String(input.details.message) : null,
-    JSON.stringify(input.details),
-    cardMeta?.last4 ?? null,
-    cardMeta?.brand ?? null,
-    cardMeta?.expMonth ?? null,
-    cardMeta?.expYear ?? null,
-    input.card?.cardholderName ||
-      `${input.donor.firstName} ${input.donor.lastName}`,
-    ip,
-    geo.city,
-    geo.region,
-    geo.country,
-    geo.countryCode,
-    geo.latitude,
-    geo.longitude
-  );
-
-  const donationId = Number(result.lastInsertRowid);
+  const donationId = Number(inserted[0].id);
   const donorName = `${input.donor.firstName} ${input.donor.lastName}`;
 
   const thankYou = thankYouEmail({
@@ -106,28 +109,36 @@ export async function createDonation(
   return { referenceId, donationId };
 }
 
-export function getDonationById(id: number): DonationRow | undefined {
-  const db = getDb();
-  return db
-    .prepare("SELECT * FROM donations WHERE id = ?")
-    .get(id) as DonationRow | undefined;
+export async function getDonationById(
+  id: number
+): Promise<DonationRow | undefined> {
+  const sql = await getDb();
+  const rows = await sql`SELECT * FROM donations WHERE id = ${id} LIMIT 1`;
+  const row = rows[0];
+  return row ? mapDonationRow(row as Record<string, unknown>) : undefined;
 }
 
-export function getDonationByRef(ref: string): DonationRow | undefined {
-  const db = getDb();
-  return db
-    .prepare("SELECT * FROM donations WHERE reference_id = ?")
-    .get(ref) as DonationRow | undefined;
+export async function getDonationByRef(
+  ref: string
+): Promise<DonationRow | undefined> {
+  const sql = await getDb();
+  const rows = await sql`
+    SELECT * FROM donations WHERE reference_id = ${ref} LIMIT 1
+  `;
+  const row = rows[0];
+  return row ? mapDonationRow(row as Record<string, unknown>) : undefined;
 }
 
 export async function confirmDonation(id: number) {
-  const db = getDb();
-  const row = getDonationById(id);
+  const sql = await getDb();
+  const row = await getDonationById(id);
   if (!row) throw new Error("Donation not found");
 
-  db.prepare(
-    `UPDATE donations SET status = 'confirmed', confirmed_at = datetime('now') WHERE id = ?`
-  ).run(id);
+  await sql`
+    UPDATE donations
+    SET status = 'confirmed', confirmed_at = NOW()
+    WHERE id = ${id}
+  `;
 
   const donorName = `${row.first_name} ${row.last_name}`;
   const confirmation = confirmationEmail({
@@ -148,7 +159,7 @@ export async function confirmDonation(id: number) {
 }
 
 export async function sendDonationReceipt(id: number) {
-  const row = getDonationById(id);
+  const row = await getDonationById(id);
   if (!row) throw new Error("Donation not found");
 
   const donorName = `${row.first_name} ${row.last_name}`;
@@ -170,7 +181,7 @@ export async function sendDonationReceipt(id: number) {
 }
 
 export async function sendDonationReminder(id: number) {
-  const row = getDonationById(id);
+  const row = await getDonationById(id);
   if (!row) throw new Error("Donation not found");
 
   const donorName = `${row.first_name} ${row.last_name}`;
@@ -194,49 +205,44 @@ export async function sendDonationReminder(id: number) {
   });
 }
 
-export function getAdminStats() {
-  const db = getDb();
+export async function getAdminStats() {
+  const sql = await getDb();
 
-  const totals = db
-    .prepare(
-      `SELECT
-        COUNT(*) as total_count,
-        COALESCE(SUM(amount), 0) as total_amount,
-        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_count,
-        SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END) as confirmed_count
-      FROM donations`
-    )
-    .get() as {
+  const totalsRows = await sql`
+    SELECT
+      COUNT(*)::int as total_count,
+      COALESCE(SUM(amount), 0)::float as total_amount,
+      SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END)::int as pending_count,
+      SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END)::int as confirmed_count
+    FROM donations
+  `;
+  const totals = totalsRows[0] as {
     total_count: number;
     total_amount: number;
     pending_count: number;
     confirmed_count: number;
   };
 
-  const monthly = db
-    .prepare(
-      `SELECT strftime('%Y-%m', created_at) as month,
-              COUNT(*) as count,
-              COALESCE(SUM(amount), 0) as amount
-       FROM donations
-       GROUP BY month
-       ORDER BY month ASC`
-    )
-    .all() as { month: string; count: number; amount: number }[];
+  const monthly = (await sql`
+    SELECT to_char(created_at, 'YYYY-MM') as month,
+           COUNT(*)::int as count,
+           COALESCE(SUM(amount), 0)::float as amount
+    FROM donations
+    GROUP BY month
+    ORDER BY month ASC
+  `) as { month: string; count: number; amount: number }[];
 
-  const geographic = db
-    .prepare(
-      `SELECT COALESCE(country, 'Unknown') as country,
-              COALESCE(city, 'Unknown') as city,
-              COALESCE(region, '') as region,
-              COUNT(*) as count,
-              COALESCE(SUM(amount), 0) as amount
-       FROM donations
-       GROUP BY country, city, region
-       ORDER BY count DESC
-       LIMIT 50`
-    )
-    .all() as {
+  const geographic = (await sql`
+    SELECT COALESCE(country, 'Unknown') as country,
+           COALESCE(city, 'Unknown') as city,
+           COALESCE(region, '') as region,
+           COUNT(*)::int as count,
+           COALESCE(SUM(amount), 0)::float as amount
+    FROM donations
+    GROUP BY country, city, region
+    ORDER BY count DESC
+    LIMIT 50
+  `) as {
     country: string;
     city: string;
     region: string;
@@ -244,12 +250,11 @@ export function getAdminStats() {
     amount: number;
   }[];
 
-  const byType = db
-    .prepare(
-      `SELECT type, COUNT(*) as count, COALESCE(SUM(amount), 0) as amount
-       FROM donations GROUP BY type`
-    )
-    .all() as { type: string; count: number; amount: number }[];
+  const byType = (await sql`
+    SELECT type, COUNT(*)::int as count, COALESCE(SUM(amount), 0)::float as amount
+    FROM donations
+    GROUP BY type
+  `) as { type: string; count: number; amount: number }[];
 
   let peakMonth = monthly[0]?.month ?? null;
   let peakAmount = monthly[0]?.amount ?? 0;
@@ -260,36 +265,107 @@ export function getAdminStats() {
     }
   }
 
-  return { totals, monthly, geographic, byType, peakMonth, peakAmount };
+  return {
+    totals: {
+      total_count: Number(totals.total_count),
+      total_amount: Number(totals.total_amount),
+      pending_count: Number(totals.pending_count),
+      confirmed_count: Number(totals.confirmed_count),
+    },
+    monthly,
+    geographic,
+    byType,
+    peakMonth,
+    peakAmount,
+  };
 }
 
-export function listDonations(filters?: {
+export async function listDonations(filters?: {
   status?: DonationStatus;
   search?: string;
   limit?: number;
 }) {
-  const db = getDb();
-  let sql = "SELECT * FROM donations WHERE 1=1";
-  const params: (string | number)[] = [];
+  const sql = await getDb();
+  const limit = filters?.limit ?? 200;
 
-  if (filters?.status) {
-    sql += " AND status = ?";
-    params.push(filters.status);
-  }
-  if (filters?.search) {
-    sql += " AND (email LIKE ? OR first_name LIKE ? OR last_name LIKE ? OR reference_id LIKE ?)";
+  let rows;
+  if (filters?.status && filters?.search) {
     const q = `%${filters.search}%`;
-    params.push(q, q, q, q);
+    rows = await sql`
+      SELECT * FROM donations
+      WHERE status = ${filters.status}
+        AND (
+          email ILIKE ${q}
+          OR first_name ILIKE ${q}
+          OR last_name ILIKE ${q}
+          OR reference_id ILIKE ${q}
+        )
+      ORDER BY created_at DESC
+      LIMIT ${limit}
+    `;
+  } else if (filters?.status) {
+    rows = await sql`
+      SELECT * FROM donations
+      WHERE status = ${filters.status}
+      ORDER BY created_at DESC
+      LIMIT ${limit}
+    `;
+  } else if (filters?.search) {
+    const q = `%${filters.search}%`;
+    rows = await sql`
+      SELECT * FROM donations
+      WHERE email ILIKE ${q}
+         OR first_name ILIKE ${q}
+         OR last_name ILIKE ${q}
+         OR reference_id ILIKE ${q}
+      ORDER BY created_at DESC
+      LIMIT ${limit}
+    `;
+  } else {
+    rows = await sql`
+      SELECT * FROM donations
+      ORDER BY created_at DESC
+      LIMIT ${limit}
+    `;
   }
-  sql += " ORDER BY created_at DESC LIMIT ?";
-  params.push(filters?.limit ?? 200);
 
-  return db.prepare(sql).all(...params) as DonationRow[];
+  return rows.map((row) =>
+    mapDonationRow(row as Record<string, unknown>)
+  ) as DonationRow[];
 }
 
-export function getEmailLogs(donationId: number) {
-  const db = getDb();
-  return db
-    .prepare("SELECT * FROM email_logs WHERE donation_id = ? ORDER BY sent_at DESC")
-    .all(donationId);
+export async function getEmailLogs(donationId: number): Promise<EmailLogRow[]> {
+  const sql = await getDb();
+  const rows = await sql`
+    SELECT * FROM email_logs
+    WHERE donation_id = ${donationId}
+    ORDER BY sent_at DESC
+  `;
+  return rows.map((row) =>
+    mapEmailLogRow(row as Record<string, unknown>)
+  );
+}
+
+export async function listDonors(): Promise<DonorSummary[]> {
+  const sql = await getDb();
+  const rows = await sql`
+    SELECT email, first_name, last_name,
+           COUNT(*)::int as donation_count,
+           COALESCE(SUM(amount), 0)::float as total_amount,
+           MAX(created_at) as last_donation,
+           MIN(id)::int as first_donation_id
+    FROM donations
+    GROUP BY email, first_name, last_name
+    ORDER BY last_donation DESC
+  `;
+
+  return rows.map((row) => ({
+    email: String(row.email),
+    first_name: String(row.first_name),
+    last_name: String(row.last_name),
+    donation_count: Number(row.donation_count),
+    total_amount: Number(row.total_amount),
+    last_donation: String(row.last_donation),
+    first_donation_id: Number(row.first_donation_id),
+  }));
 }

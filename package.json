@@ -8,11 +8,12 @@
     "build": "next build",
     "export:html": "node scripts/export-html-project.mjs",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:init": "node scripts/init-neon-db.mjs"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.10.0",
     "clsx": "^2.1.1",
     "jose": "^6.2.3",
     "lucide-react": "^0.469.0",
@@ -24,7 +25,6 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.10.0",
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19.0.0",

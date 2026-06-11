@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status") as DonationStatus | null;
     const search = searchParams.get("search") || undefined;
 
-    const donations = listDonations({
+    const donations = await listDonations({
       status: status || undefined,
       search,
     });

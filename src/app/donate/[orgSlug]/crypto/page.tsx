@@ -19,7 +19,7 @@ export default async function OrgCryptoDonatePage({
 
   return (
     <OrgDonationShell org={org} methodLabel="Cryptocurrency">
-      <div className="grid gap-12 lg:grid-cols-5">
+      <div className="grid gap-8 lg:grid-cols-5 lg:gap-12">
         <div className="lg:col-span-3">
           <CryptoDonationForm organization={org} />
         </div>

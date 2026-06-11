@@ -10,11 +10,11 @@ export async function GET(
   try {
     await requireAdmin();
     const { id } = await params;
-    const donation = getDonationById(parseInt(id, 10));
+    const donation = await getDonationById(parseInt(id, 10));
     if (!donation) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
-    const emails = getEmailLogs(donation.id);
+    const emails = await getEmailLogs(donation.id);
     return NextResponse.json({
       donation,
       details: parseDetails(donation),

@@ -19,7 +19,7 @@ export default async function AdminSubmissionsPage({
   if (!session) redirect("/admin/login");
 
   const params = await searchParams;
-  const submissions = listFormSubmissions(
+  const submissions = await listFormSubmissions(
     params.type as "contact" | "consortium" | "volunteer" | undefined
   );
 
@@ -32,11 +32,11 @@ export default async function AdminSubmissionsPage({
             Contact, consortium, and volunteer inquiries
           </p>
         </div>
-        <form className="flex gap-2">
+        <form className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
           <select
             name="type"
             defaultValue={params.type || ""}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+            className="min-h-[44px] rounded-lg border border-slate-200 px-3 py-2 text-sm"
           >
             <option value="">All forms</option>
             <option value="contact">Contact</option>

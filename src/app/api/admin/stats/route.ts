@@ -5,7 +5,7 @@ import { getAdminStats } from "@/lib/donations-service";
 export async function GET() {
   try {
     await requireAdmin();
-    return NextResponse.json(getAdminStats());
+    return NextResponse.json(await getAdminStats());
   } catch {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

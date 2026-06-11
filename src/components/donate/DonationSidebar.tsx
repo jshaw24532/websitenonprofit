@@ -5,7 +5,7 @@ import { givingBlockIntegration } from "@/lib/donations";
 
 export default function DonationSidebar() {
   return (
-    <div className="sticky top-28 space-y-6">
+    <div className="space-y-6 lg:sticky lg:top-28">
       <div className="rounded-2xl bg-navy-950 p-6 text-white">
         <h3 className="mb-4 text-lg font-bold">How Non-Cash Gifts Work</h3>
         <ol className="space-y-4 text-sm text-navy-200">

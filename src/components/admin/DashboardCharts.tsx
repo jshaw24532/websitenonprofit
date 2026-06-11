@@ -67,9 +67,9 @@ export default function DashboardCharts({
             </strong>
           </p>
         )}
-        <div className="h-72">
+        <div className="h-56 sm:h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={monthLabels}>
+            <BarChart data={monthLabels} margin={{ left: -10, right: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="label" tick={{ fontSize: 11 }} />
               <YAxis tick={{ fontSize: 11 }} />
@@ -97,9 +97,9 @@ export default function DashboardCharts({
         <h3 className="mb-4 text-lg font-bold text-navy-950">
           Donations by Location
         </h3>
-        <div className="h-72">
+        <div className="h-56 sm:h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={topGeo} layout="vertical">
+            <BarChart data={topGeo} layout="vertical" margin={{ left: 4, right: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis type="number" tick={{ fontSize: 11 }} />
               <YAxis

@@ -40,9 +40,9 @@ export default function GovernmentPageLayout({
 
       <section className="section-padding bg-white">
         <div className="container-wide">
-          <div className="grid gap-12 lg:grid-cols-3">
-            <aside className="lg:col-span-1">
-              <div className="sticky top-28 rounded-2xl border border-navy-100 bg-navy-50 p-6">
+          <div className="grid gap-8 lg:grid-cols-3 lg:gap-12">
+            <aside className="order-2 lg:order-1 lg:col-span-1">
+              <div className="rounded-2xl border border-navy-100 bg-navy-50 p-4 sm:p-6 lg:sticky lg:top-28">
                 <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-navy-500">
                   Consortium Navigation
                 </h3>
@@ -60,7 +60,7 @@ export default function GovernmentPageLayout({
               </div>
             </aside>
 
-            <article className="lg:col-span-2">
+            <article className="order-1 lg:order-2 lg:col-span-2">
               <Breadcrumbs
                 items={[
                   { label: "Government & Infrastructure", href: "/government" },

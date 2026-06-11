@@ -56,10 +56,10 @@ export default function Header() {
             >
               <Building2 className="h-5 w-5" />
             </div>
-            <div className="hidden sm:block">
+            <div className="min-w-0 max-w-[11rem] sm:max-w-none">
               <p
                 className={cn(
-                  "text-sm font-bold leading-tight",
+                  "truncate text-xs font-bold leading-tight sm:text-sm",
                   useSolidHeader ? "text-navy-950" : "text-white"
                 )}
               >
@@ -67,7 +67,7 @@ export default function Header() {
               </p>
               <p
                 className={cn(
-                  "text-xs",
+                  "hidden truncate text-xs sm:block",
                   useSolidHeader ? "text-navy-500" : "text-white/70"
                 )}
               >
@@ -123,7 +123,7 @@ export default function Header() {
               </button>
 
               {govOpen && (
-                <div className="absolute right-0 top-full mt-2 w-[420px] rounded-2xl border border-navy-100 bg-white p-4 shadow-2xl">
+                <div className="absolute right-0 top-full z-50 mt-2 w-[min(420px,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] rounded-2xl border border-navy-100 bg-white p-4 shadow-2xl">
                   <p className="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-navy-400">
                     National Civic Blockchain Infrastructure Consortium
                   </p>
@@ -166,7 +166,7 @@ export default function Header() {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className={cn(
-              "rounded-lg p-2 lg:hidden",
+              "flex h-11 w-11 items-center justify-center rounded-lg lg:hidden",
               useSolidHeader
                 ? "text-navy-900"
                 : "text-white"

@@ -61,16 +61,20 @@ export async function verifyAdminLogin(
   email: string,
   password: string
 ): Promise<AdminSession | null> {
-  const db = getDb();
-  const row = db
-    .prepare("SELECT id, email, password_hash, name FROM admin_users WHERE email = ?")
-    .get(email) as
+  const sql = await getDb();
+  const rows = await sql`
+    SELECT id, email, password_hash, name
+    FROM admin_users
+    WHERE email = ${email}
+    LIMIT 1
+  `;
+  const row = rows[0] as
     | { id: number; email: string; password_hash: string; name: string }
     | undefined;
 
   if (!row || !bcrypt.compareSync(password, row.password_hash)) return null;
 
-  return { adminId: row.id, email: row.email, name: row.name };
+  return { adminId: Number(row.id), email: row.email, name: row.name };
 }
 
 export async function requireAdmin(): Promise<AdminSession> {
