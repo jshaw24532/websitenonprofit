@@ -10,19 +10,19 @@ export default function DonationSidebar() {
         <h3 className="mb-4 text-lg font-bold">How Non-Cash Gifts Work</h3>
         <ol className="space-y-4 text-sm text-navy-200">
           <li className="flex gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-navy-950">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-white">
               1
             </span>
             <span>You submit your crypto, stock, or DAF gift through our secure form</span>
           </li>
           <li className="flex gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-navy-950">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-white">
               2
             </span>
             <span>Assets are received and verified by our donation processor</span>
           </li>
           <li className="flex gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-navy-950">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-white">
               3
             </span>
             <span>
@@ -31,7 +31,7 @@ export default function DonationSidebar() {
             </span>
           </li>
           <li className="flex gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-navy-950">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-white">
               4
             </span>
             <span>You receive an automatic tax receipt for your records</span>

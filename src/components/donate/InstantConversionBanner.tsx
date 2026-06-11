@@ -5,7 +5,7 @@ export default function InstantConversionBanner() {
   return (
     <div className="rounded-2xl border border-gold-200 bg-gradient-to-br from-gold-50 via-white to-navy-50 p-6 md:p-8">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold-500 text-navy-950">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold-500 text-white">
           <Zap className="h-6 w-6" />
         </div>
         <div>

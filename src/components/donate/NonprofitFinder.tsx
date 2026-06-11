@@ -200,7 +200,7 @@ export default function NonprofitFinder() {
               <SlidersHorizontal className="h-4 w-4" />
               Filter by
               {(categoryIds.length > 0 || methodFilter) && (
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gold-500 text-xs text-navy-950">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gold-500 text-xs text-white">
                   {categoryIds.length + (methodFilter ? 1 : 0)}
                 </span>
               )}
@@ -274,7 +274,7 @@ export default function NonprofitFinder() {
                   className={cn(
                     "rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
                     categoryIds.includes(cat.id)
-                      ? "bg-gold-500 text-navy-950"
+                      ? "bg-gold-500 text-white"
                       : "bg-navy-100 text-navy-700 hover:bg-navy-200"
                   )}
                 >
@@ -370,7 +370,7 @@ export default function NonprofitFinder() {
                       </span>
                     ))}
                   </div>
-                  <span className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-gold-500 py-2.5 text-sm font-semibold text-navy-950 transition-colors group-hover:bg-gold-400">
+                  <span className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-gold-500 py-2.5 text-sm font-semibold text-white transition-colors group-hover:bg-gold-400">
                     <Heart className="h-4 w-4" />
                     Donate
                   </span>
