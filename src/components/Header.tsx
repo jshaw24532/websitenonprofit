@@ -130,8 +130,8 @@ export default function Header() {
               className={cn(
                 "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all",
                 useSolidHeader
-                  ? "bg-gold-500 text-navy-950 hover:bg-gold-400"
-                  : "bg-gold-500 text-navy-950 hover:bg-gold-400"
+                  ? "bg-gold-500 text-white hover:bg-gold-400"
+                  : "bg-gold-500 text-white hover:bg-gold-400"
               )}
             >
               <Heart className="h-4 w-4" />
