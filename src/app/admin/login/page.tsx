@@ -40,9 +40,9 @@ export default function AdminLoginPage() {
           <Image
             src="/images/logo-on3rd-outreach.png"
             alt="On 3rd Outreach"
-            width={72}
-            height={72}
-            className="mx-auto mb-4 rounded-full"
+            width={96}
+            height={96}
+            className="mx-auto mb-4 size-24 rounded-full"
           />
           <h1 className="text-2xl font-bold text-navy-950">Admin Portal</h1>
           <p className="mt-2 text-sm text-navy-600">

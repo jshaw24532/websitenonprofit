@@ -14,9 +14,9 @@ interface SiteLogoProps {
 }
 
 const sizeMap = {
-  sm: { img: 36, text: "text-xs" },
-  md: { img: 44, text: "text-sm" },
-  lg: { img: 56, text: "text-base" },
+  sm: { img: 48, text: "text-sm", imgClass: "size-12" },
+  md: { img: 64, text: "text-sm", imgClass: "size-14 sm:size-16" },
+  lg: { img: 80, text: "text-base", imgClass: "size-16 sm:size-[4.5rem] lg:size-20" },
 };
 
 export default function SiteLogo({
@@ -28,7 +28,7 @@ export default function SiteLogo({
   subtitleClassName,
   subtitle = "National Civic Infrastructure",
 }: SiteLogoProps) {
-  const { img, text } = sizeMap[size];
+  const { img, text, imgClass } = sizeMap[size];
 
   const content = (
     <div className={cn("flex items-center gap-3", className)}>
@@ -37,7 +37,7 @@ export default function SiteLogo({
         alt={`${siteConfig.shortName} logo`}
         width={img}
         height={img}
-        className="shrink-0 rounded-full"
+        className={cn("shrink-0 rounded-full", imgClass)}
         priority
       />
       {showText && (

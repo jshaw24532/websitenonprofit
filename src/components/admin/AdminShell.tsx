@@ -99,9 +99,9 @@ export default function AdminShell({
             <Image
               src="/images/logo-on3rd-outreach.png"
               alt="On 3rd Outreach"
-              width={32}
-              height={32}
-              className="shrink-0 rounded-full"
+              width={44}
+              height={44}
+              className="size-11 shrink-0 rounded-full"
             />
             <div className="min-w-0">
               <p className="truncate text-sm font-bold">Admin Portal</p>

@@ -40,9 +40,9 @@ export default function Header() {
     >
       <div className="container-wide">
         <div className="flex h-16 items-center justify-between lg:h-20">
-          <div className="min-w-0 max-w-[11rem] sm:max-w-none">
+          <div className="min-w-0 max-w-none">
             <SiteLogo
-              size="md"
+              size="lg"
               textClassName={
                 useSolidHeader ? "text-navy-950" : "text-white"
               }
