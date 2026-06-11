@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Building2, Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 import { siteConfig, footerNav } from "@/lib/config";
+import SiteLogo from "@/components/SiteLogo";
 
 export default function Footer() {
   return (
@@ -8,14 +9,14 @@ export default function Footer() {
       <div className="container-wide section-padding pb-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold-500 text-navy-950">
-                <Building2 className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-sm font-bold">{siteConfig.shortName}</p>
-                <p className="text-xs text-navy-300">501(c)(3) Nonprofit</p>
-              </div>
+            <div className="mb-4">
+              <SiteLogo
+                size="sm"
+                href="/"
+                textClassName="text-white"
+                subtitle="501(c)(3) Nonprofit"
+                subtitleClassName="text-navy-300"
+              />
             </div>
             <p className="mb-6 text-sm leading-relaxed text-navy-300">
               {siteConfig.description}

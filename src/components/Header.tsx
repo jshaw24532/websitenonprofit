@@ -3,15 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Menu,
-  X,
-  ChevronDown,
-  Building2,
-  Heart,
-} from "lucide-react";
-import { siteConfig, mainNav, governmentNav } from "@/lib/config";
+import { Menu, X, ChevronDown, Heart } from "lucide-react";
+import { mainNav, governmentNav } from "@/lib/config";
 import { cn } from "@/lib/utils";
+import SiteLogo from "@/components/SiteLogo";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -45,36 +40,17 @@ export default function Header() {
     >
       <div className="container-wide">
         <div className="flex h-16 items-center justify-between lg:h-20">
-          <Link href="/" className="flex items-center gap-3">
-            <div
-              className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-lg transition-colors",
-                useSolidHeader
-                  ? "bg-navy-900 text-gold-400"
-                  : "bg-white/10 text-gold-400 backdrop-blur-sm"
-              )}
-            >
-              <Building2 className="h-5 w-5" />
-            </div>
-            <div className="min-w-0 max-w-[11rem] sm:max-w-none">
-              <p
-                className={cn(
-                  "truncate text-xs font-bold leading-tight sm:text-sm",
-                  useSolidHeader ? "text-navy-950" : "text-white"
-                )}
-              >
-                {siteConfig.shortName}
-              </p>
-              <p
-                className={cn(
-                  "hidden truncate text-xs sm:block",
-                  useSolidHeader ? "text-navy-500" : "text-white/70"
-                )}
-              >
-                National Civic Infrastructure
-              </p>
-            </div>
-          </Link>
+          <div className="min-w-0 max-w-[11rem] sm:max-w-none">
+            <SiteLogo
+              size="md"
+              textClassName={
+                useSolidHeader ? "text-navy-950" : "text-white"
+              }
+              subtitleClassName={
+                useSolidHeader ? "text-navy-500" : "text-white/70"
+              }
+            />
+          </div>
 
           <nav className="hidden items-center gap-1 lg:flex">
             {mainNav.map((item) => (

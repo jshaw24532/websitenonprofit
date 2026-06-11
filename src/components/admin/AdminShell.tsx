@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -7,7 +8,6 @@ import {
   LayoutDashboard,
   Heart,
   LogOut,
-  Shield,
   Users,
   Inbox,
   Menu,
@@ -96,7 +96,13 @@ export default function AdminShell({
       >
         <div className="flex h-16 items-center justify-between border-b border-white/10 px-4 lg:px-6">
           <div className="flex items-center gap-2">
-            <Shield className="h-6 w-6 shrink-0 text-gold-400" />
+            <Image
+              src="/images/logo-on3rd-outreach.png"
+              alt="On 3rd Outreach"
+              width={32}
+              height={32}
+              className="shrink-0 rounded-full"
+            />
             <div className="min-w-0">
               <p className="truncate text-sm font-bold">Admin Portal</p>
               <p className="truncate text-xs text-white/60">Donations Control</p>

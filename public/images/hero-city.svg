@@ -6,8 +6,8 @@
       <stop offset="1" stop-color="#243b53"/>
     </linearGradient>
     <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
-      <stop stop-color="#d4a853"/>
-      <stop offset="1" stop-color="#c9952e"/>
+      <stop stop-color="#4d9468"/>
+      <stop offset="1" stop-color="#246b3e"/>
     </linearGradient>
   </defs>
   <rect width="1920" height="1080" fill="url(#sky)"/>

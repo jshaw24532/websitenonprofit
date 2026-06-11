@@ -53,7 +53,7 @@ export const organizations: Organization[] = [
     popular: true,
     underserved: true,
     featured: true,
-    accentColor: "#c9952e",
+    accentColor: "#246b3e",
   },
   {
     slug: "municipal-blockchain-consortium",

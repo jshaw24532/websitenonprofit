@@ -34,6 +34,10 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.shortName}`,
   },
   description: siteConfig.description,
+  icons: {
+    icon: "/images/logo-on3rd-outreach.png",
+    apple: "/images/logo-on3rd-outreach.png",
+  },
   keywords: [
     "municipal blockchain",
     "civic infrastructure",

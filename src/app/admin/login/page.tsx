@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, Loader2 } from "lucide-react";
+import Image from "next/image";
+import { Loader2 } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -36,7 +37,13 @@ export default function AdminLoginPage() {
     <div className="flex min-h-[100dvh] items-center justify-center bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800 p-4 sm:p-6">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white p-6 shadow-2xl sm:p-8">
         <div className="mb-8 text-center">
-          <Shield className="mx-auto mb-4 h-12 w-12 text-gold-500" />
+          <Image
+            src="/images/logo-on3rd-outreach.png"
+            alt="On 3rd Outreach"
+            width={72}
+            height={72}
+            className="mx-auto mb-4 rounded-full"
+          />
           <h1 className="text-2xl font-bold text-navy-950">Admin Portal</h1>
           <p className="mt-2 text-sm text-navy-600">
             Donations management &amp; donor communications

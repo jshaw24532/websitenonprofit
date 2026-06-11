@@ -282,7 +282,7 @@ export default function StripeCheckout(props: StripeCheckoutProps) {
         appearance: {
           theme: "stripe",
           variables: {
-            colorPrimary: "#c9952e",
+            colorPrimary: "#246b3e",
             colorText: "#0a1929",
             borderRadius: "8px",
           },
