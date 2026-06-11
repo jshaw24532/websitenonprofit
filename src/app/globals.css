@@ -51,7 +51,8 @@
   }
 
   .btn-primary {
-    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-gold-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-gold-500/25 transition-all duration-200 hover:bg-gold-400 hover:shadow-xl hover:shadow-gold-500/30 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2 sm:px-6;
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-gold-500 px-5 py-3 text-sm font-semibold !text-white shadow-lg shadow-gold-500/25 transition-all duration-200 hover:bg-gold-400 hover:!text-white hover:shadow-xl hover:shadow-gold-500/30 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2 sm:px-6;
+    @apply [&_svg]:!text-white [&_svg]:stroke-current;
   }
 
   .btn-secondary {
@@ -117,6 +118,27 @@
   .prose-content li {
     @apply text-navy-600;
   }
+}
+
+/* Green CTA buttons: keep label and icons white everywhere */
+a.btn-primary,
+button.btn-primary,
+.btn-primary {
+  color: #ffffff !important;
+}
+
+a.btn-primary:hover,
+button.btn-primary:hover,
+.btn-primary:hover,
+a.btn-primary:focus,
+button.btn-primary:focus,
+.btn-primary:focus {
+  color: #ffffff !important;
+}
+
+.btn-primary svg {
+  color: #ffffff !important;
+  stroke: currentColor;
 }
 
 @keyframes cinematicPulse {
