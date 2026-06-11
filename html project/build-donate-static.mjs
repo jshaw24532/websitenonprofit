@@ -1,0 +1,179 @@
+/**
+ * Build standalone /donate/ page — no Next.js router (fixes infinite refresh).
+ * Run: node build-donate-static.mjs
+ */
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const root = path.dirname(fileURLToPath(import.meta.url));
+const dataPath = path.join(root, "assets", "data", "donate-data.json");
+const jsPath = path.join(root, "assets", "js", "donate-finder-static.js");
+const htmlPath = path.join(root, "donate", "index.html");
+
+// Extract org + category data from Next source (read-only)
+function loadData() {
+  if (fs.existsSync(dataPath)) {
+    return JSON.parse(fs.readFileSync(dataPath, "utf8"));
+  }
+  throw new Error("Run node extract-donate-data.mjs first");
+}
+
+function navHtml(activeDonate = true) {
+  const link = (href, label, active = false) =>
+    `<a class="rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+      active ? "bg-navy-50 text-navy-950" : "text-navy-700 hover:text-navy-950"
+    }" href="${href}">${label}</a>`;
+
+  return `<header id="site-header" class="fixed top-0 z-50 w-full bg-white/95 shadow-md backdrop-blur-md transition-all duration-300">
+  <div class="container-wide">
+    <div class="flex h-16 items-center justify-between lg:h-20">
+      <a class="flex items-center gap-3" href="/">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-navy-900 text-gold-400">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/></svg>
+        </div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold leading-tight text-navy-950">On 3rd Outreach</p>
+          <p class="text-xs text-navy-500">National Civic Infrastructure</p>
+        </div>
+      </a>
+      <nav class="hidden items-center gap-1 lg:flex">
+        ${link("/", "Home")}
+        ${link("/about/", "About")}
+        ${link("/mission/", "Our Mission")}
+        ${link("/programs/", "Programs")}
+        ${link("/impact/", "Impact")}
+        <a class="rounded-lg px-3 py-2 text-sm font-semibold text-navy-700 hover:text-navy-950" href="/government/">Government &amp; Infrastructure</a>
+      </nav>
+      <div class="hidden lg:flex">
+        <a class="inline-flex items-center gap-2 rounded-lg bg-gold-500 px-4 py-2.5 text-sm font-semibold text-navy-950 hover:bg-gold-400" href="/donate/">Donate</a>
+      </div>
+      <button type="button" id="mobile-menu-btn" class="rounded-lg p-2 text-navy-900 lg:hidden" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden border-t border-navy-100 bg-white lg:hidden">
+    <div class="container-wide space-y-1 py-4">
+      ${link("/", "Home")} ${link("/about/", "About")} ${link("/mission/", "Our Mission")}
+      ${link("/programs/", "Programs")} ${link("/impact/", "Impact")}
+      <a class="block rounded-lg px-4 py-3 text-sm font-medium text-navy-800 hover:bg-navy-50" href="/government/">Government &amp; Infrastructure</a>
+      <a class="btn-primary mx-4 mt-2 block text-center" href="/donate/">Donate Now</a>
+    </div>
+  </div>
+</header>`;
+}
+
+function footerHtml() {
+  return `<footer class="bg-navy-950 text-white">
+  <div class="container-wide section-padding pb-8">
+    <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <p class="mb-4 text-sm font-bold">On 3rd Outreach</p>
+        <p class="mb-6 text-sm text-navy-300">A first-of-its-kind collaborative initiative bringing together enterprise blockchain companies, municipal governments, universities, and infrastructure specialists.</p>
+        <p class="text-sm text-navy-300">info@on3rdoutreach.org</p>
+      </div>
+      <div>
+        <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-gold-400">Organization</h3>
+        <ul class="space-y-2 text-sm text-navy-300">
+          <li><a href="/about/" class="hover:text-white">About Us</a></li>
+          <li><a href="/mission/" class="hover:text-white">Our Mission</a></li>
+          <li><a href="/programs/" class="hover:text-white">Programs</a></li>
+          <li><a href="/impact/" class="hover:text-white">Impact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-gold-400">Government</h3>
+        <ul class="space-y-2 text-sm text-navy-300">
+          <li><a href="/government/executive-overview/" class="hover:text-white">Executive Overview</a></li>
+          <li><a href="/government/founding-partners/" class="hover:text-white">Founding Partners</a></li>
+          <li><a href="/government/university-workforce/" class="hover:text-white">Workforce Pipeline</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-gold-400">Support Us</h3>
+        <ul class="space-y-2 text-sm text-navy-300">
+          <li><a href="/donate/" class="hover:text-white">Find a Cause</a></li>
+          <li><a href="/volunteer/" class="hover:text-white">Volunteer</a></li>
+          <li><a href="/contact/" class="hover:text-white">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 border-t border-navy-800 pt-8 text-center text-sm text-navy-400">
+      &copy; ${new Date().getFullYear()} On 3rd Affordable Food Outreach Service Truck. All rights reserved.
+    </div>
+  </div>
+</footer>`;
+}
+
+const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Donate | On 3rd Outreach</title>
+  <meta name="description" content="Find a cause and donate with crypto, stock, DAF, or card. Browse 25 impact areas and organizations."/>
+  <link rel="stylesheet" href="/assets/css/main.css"/>
+</head>
+<body class="font-sans">
+${navHtml()}
+<main class="pt-16 lg:pt-20">
+  <div class="min-h-screen bg-navy-50">
+    <div class="border-b border-navy-100 bg-white">
+      <div class="container-wide py-10 md:py-14">
+        <p class="mb-2 text-xs font-semibold uppercase tracking-widest text-gold-600">Nonprofit Donation Platform</p>
+        <h1 class="heading-section mb-3 max-w-3xl">Find a Cause That Matches Your Passion</h1>
+        <p class="text-lead max-w-2xl">Make a crypto, stock, DAF, or card donation to your favorite cause. All non-cash gifts convert to cash automatically upon receipt.</p>
+      </div>
+    </div>
+    <div class="container-wide py-8" id="donate-finder-app">
+      <div id="featured-orgs" class="mb-8 hidden"></div>
+      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div class="relative flex-1 lg:max-w-xl">
+          <input type="search" id="search-input" placeholder="Search organizations..." class="w-full rounded-xl border border-navy-200 bg-white py-3 pl-4 pr-4 text-navy-900 shadow-sm focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20"/>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex rounded-xl border border-navy-200 bg-white p-1" id="sort-buttons">
+            <button type="button" data-sort="popular" class="sort-btn rounded-lg bg-navy-900 px-4 py-2 text-sm font-medium capitalize text-white">popular</button>
+            <button type="button" data-sort="underserved" class="sort-btn rounded-lg px-4 py-2 text-sm font-medium capitalize text-navy-700 hover:bg-navy-50">underserved</button>
+          </div>
+          <button type="button" id="toggle-filters" class="inline-flex items-center gap-2 rounded-xl border border-navy-200 bg-white px-4 py-3 text-sm font-semibold text-navy-800 hover:border-navy-300">Filter by <span id="filter-count" class="hidden h-5 w-5 items-center justify-center rounded-full bg-gold-500 text-xs text-navy-950"></span></button>
+          <button type="button" id="clear-filters" class="hidden text-sm font-medium text-navy-600 hover:text-navy-950">Clear all filters</button>
+        </div>
+      </div>
+      <div id="filter-panel" class="mb-8 hidden rounded-2xl border border-navy-100 bg-white p-6 shadow-sm">
+        <div class="mb-6">
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-navy-500">Ways to Give</h3>
+          <div class="flex flex-wrap gap-2" id="method-filters"></div>
+        </div>
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-navy-500">Impact Areas</h3>
+          <div class="flex gap-2">
+            <button type="button" id="select-all-cats" class="text-xs font-semibold text-gold-600 hover:text-gold-500">Select all</button>
+            <button type="button" id="clear-cats" class="text-xs font-semibold text-navy-500 hover:text-navy-800">Clear categories</button>
+          </div>
+        </div>
+        <div class="flex max-h-64 flex-wrap gap-2 overflow-y-auto" id="category-filters"></div>
+      </div>
+      <p class="mb-6 text-sm text-navy-600" id="results-count"></p>
+      <div id="org-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+      <div id="empty-state" class="hidden rounded-2xl border border-navy-100 bg-white p-12 text-center">
+        <p class="mb-2 text-lg font-semibold text-navy-900">No results found</p>
+        <p class="mb-6 text-navy-600">Please check your spelling or try different keywords.</p>
+        <button type="button" id="empty-clear" class="btn-primary">Clear all filters</button>
+      </div>
+      <div class="mt-12 rounded-2xl border border-gold-200 bg-gradient-to-r from-gold-50 to-white p-6 md:p-8">
+        <h3 class="mb-2 text-lg font-bold text-navy-950">Save on your taxes by donating non-cash assets</h3>
+        <p class="text-sm text-navy-600">Donating crypto and stock directly to 501(c)(3) nonprofits offers greater tax advantages than donating cash. <a href="https://thegivingblock.com/donate/" target="_blank" rel="noopener noreferrer" class="font-medium text-gold-600 hover:underline">Learn more</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+${footerHtml()}
+<script src="/assets/js/site-nav.js"></script>
+<script src="/assets/js/donate-finder-static.js"></script>
+</body>
+</html>`;
+
+fs.writeFileSync(htmlPath, html);
+console.log("Wrote donate/index.html (static, no Next.js router)");
