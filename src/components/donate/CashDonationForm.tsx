@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, CreditCard, CheckCircle2, Shield, Loader2 } from "lucide-react";
+import { CheckCircle2, ArrowRight } from "lucide-react";
 import { donationTiers } from "@/lib/config";
 import { formatCurrency } from "@/lib/utils";
 import type { Organization } from "@/lib/organizations";
+import StripeCheckout from "./StripeCheckout";
 
 interface CashDonationFormProps {
   organization: Organization;
@@ -14,8 +15,7 @@ export default function CashDonationForm({ organization }: CashDonationFormProps
   const [selectedTier, setSelectedTier] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
   const [frequency, setFrequency] = useState<"one-time" | "monthly">("one-time");
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState<"details" | "payment" | "done">("details");
   const [referenceId, setReferenceId] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
@@ -27,69 +27,20 @@ export default function CashDonationForm({ organization }: CashDonationFormProps
     state: "",
     zip: "",
     message: "",
-    cardNumber: "",
-    cardExpiry: "",
-    cardCvc: "",
-    cardholderName: "",
   });
 
   const amount =
     selectedTier ?? (customAmount ? parseInt(customAmount, 10) : 0);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await fetch("/api/donations/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "cash",
-          donor: {
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            phone: formData.phone || undefined,
-          },
-          details: {
-            organizationSlug: organization.slug,
-            organizationName: organization.name,
-            amount,
-            frequency,
-            message: formData.message,
-            address: formData.address,
-            city: formData.city,
-            state: formData.state,
-            zip: formData.zip,
-          },
-          card: {
-            number: formData.cardNumber,
-            expiry: formData.cardExpiry,
-            cardholderName:
-              formData.cardholderName ||
-              `${formData.firstName} ${formData.lastName}`,
-          },
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setReferenceId(data.referenceId);
-      setSubmitted(true);
-    } catch {
-      alert("Unable to submit donation. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (submitted) {
+  if (step === "done") {
     return (
       <div className="rounded-2xl border border-green-200 bg-green-50 p-8 text-center">
         <CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-600" />
         <h2 className="mb-2 text-2xl font-bold text-green-900">Thank You!</h2>
         <p className="mb-4 text-green-700">
-          Your {formatCurrency(amount)} donation to {organization.shortName} has
-          been received.
+          Your {formatCurrency(amount)}
+          {frequency === "monthly" ? " monthly " : " "}
+          donation to {organization.shortName} was successful.
         </p>
         {referenceId && (
           <p className="mb-2 font-mono text-sm text-green-800">
@@ -97,15 +48,47 @@ export default function CashDonationForm({ organization }: CashDonationFormProps
           </p>
         )}
         <p className="text-sm text-green-600">
-          A thank-you email has been sent to {formData.email}. You will receive a
-          confirmation once our team verifies receipt of funds.
+          A thank-you and confirmation email have been sent to {formData.email}.
         </p>
       </div>
     );
   }
 
+  if (step === "payment") {
+    return (
+      <div className="space-y-6">
+        <div className="rounded-xl border border-gold-200 bg-gold-50 p-4 text-sm text-navy-800">
+          <strong>
+            {formatCurrency(amount)}
+            {frequency === "monthly" ? " / month" : ""}
+          </strong>{" "}
+          to {organization.name} — {formData.firstName} {formData.lastName}
+        </div>
+        <StripeCheckout
+          organizationSlug={organization.slug}
+          organizationName={organization.name}
+          organizationShortName={organization.shortName}
+          amount={amount}
+          frequency={frequency}
+          donor={formData}
+          onSuccess={({ referenceId: ref }) => {
+            setReferenceId(ref);
+            setStep("done");
+          }}
+          onBack={() => setStep("details")}
+        />
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (amount > 0) setStep("payment");
+      }}
+      className="space-y-8"
+    >
       <div>
         <h2 className="heading-subsection mb-4">Select Donation Amount</h2>
         <div className="mb-4 flex flex-wrap gap-2">
@@ -246,76 +229,16 @@ export default function CashDonationForm({ organization }: CashDonationFormProps
         />
       </div>
 
-      <div className="rounded-xl border border-navy-200 p-6">
-        <div className="mb-4 flex items-center gap-3">
-          <CreditCard className="h-6 w-6 text-navy-600" />
-          <span className="font-semibold text-navy-900">Credit / Debit Card</span>
-        </div>
-        <input
-          required
-          type="text"
-          placeholder="Name on card"
-          value={formData.cardholderName}
-          onChange={(e) =>
-            setFormData({ ...formData, cardholderName: e.target.value })
-          }
-          className="form-input mb-4"
-        />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <input
-            required
-            type="text"
-            placeholder="Card Number"
-            value={formData.cardNumber}
-            onChange={(e) =>
-              setFormData({ ...formData, cardNumber: e.target.value })
-            }
-            className="form-input sm:col-span-2"
-            autoComplete="cc-number"
-          />
-          <input
-            required
-            type="text"
-            placeholder="MM / YY"
-            value={formData.cardExpiry}
-            onChange={(e) =>
-              setFormData({ ...formData, cardExpiry: e.target.value })
-            }
-            className="form-input"
-            autoComplete="cc-exp"
-          />
-          <input
-            required
-            type="text"
-            placeholder="CVC"
-            value={formData.cardCvc}
-            onChange={(e) =>
-              setFormData({ ...formData, cardCvc: e.target.value })
-            }
-            className="form-input"
-            autoComplete="cc-csc"
-          />
-        </div>
-        <p className="mt-3 flex items-center gap-2 text-xs text-navy-500">
-          <Shield className="h-3 w-3" />
-          Card data is transmitted securely. Only last 4 digits and expiry are stored (PCI compliant). CVV is never saved.
-        </p>
-      </div>
-
       <button
         type="submit"
-        disabled={!amount || amount <= 0 || loading}
+        disabled={!amount || amount <= 0}
         className="btn-primary w-full py-4 disabled:opacity-50"
       >
-        {loading ? (
-          <Loader2 className="h-5 w-5 animate-spin" />
-        ) : (
-          <Heart className="h-5 w-5" />
-        )}
-        Donate {amount > 0 ? formatCurrency(amount) : "Now"} to{" "}
+        <ArrowRight className="h-5 w-5" />
+        Continue to secure payment —{" "}
+        {amount > 0 ? formatCurrency(amount) : "Donate"} to{" "}
         {organization.shortName}
       </button>
     </form>
   );
 }
-

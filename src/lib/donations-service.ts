@@ -9,6 +9,7 @@ import {
 } from "./db";
 import { lookupIp, getClientIp } from "./geoip";
 import { toSafeCardMeta } from "./card-utils";
+import { verifyStripePayment } from "./stripe-payment";
 import { sendEmail } from "./email/sender";
 import {
   thankYouEmail,
@@ -26,11 +27,8 @@ export interface DonationInput {
     phone?: string;
   };
   details: Record<string, string | number | boolean | undefined>;
-  card?: {
-    number: string;
-    expiry: string;
-    cardholderName?: string;
-  };
+  stripePaymentIntentId?: string;
+  stripeSubscriptionId?: string;
 }
 
 export interface DonorSummary {
@@ -52,37 +50,58 @@ export async function createDonation(
   const ip = getClientIp(request);
   const geo = await lookupIp(ip);
 
-  let cardMeta: ReturnType<typeof toSafeCardMeta> = null;
-  if (input.type === "cash" && input.card?.number && input.card?.expiry) {
-    cardMeta = toSafeCardMeta(input.card.number, input.card.expiry);
-  }
-
   const amount =
     Number(input.details.amount) ||
     Number(input.details.grantAmountUsd) ||
     Number(input.details.estimatedUsdValue) ||
     0;
+
+  let cardMeta: ReturnType<typeof toSafeCardMeta> = null;
+  let paymentStatus: DonationStatus = "pending";
+  let stripePaymentIntentId: string | undefined;
+  let stripeSubscriptionId: string | undefined;
+
+  if (input.type === "cash") {
+    if (!input.stripePaymentIntentId) {
+      throw new Error("Card donations require a completed Stripe payment");
+    }
+    const stripePayment = await verifyStripePayment(
+      input.stripePaymentIntentId,
+      Math.round(amount * 100)
+    );
+    cardMeta = stripePayment.cardMeta;
+    paymentStatus = "confirmed";
+    stripePaymentIntentId = stripePayment.paymentIntentId;
+    stripeSubscriptionId =
+      input.stripeSubscriptionId || stripePayment.subscriptionId;
+  }
   const orgSlug = String(input.details.organizationSlug || "unknown");
   const orgName = String(input.details.organizationName || orgSlug);
   const frequency = input.details.frequency
     ? String(input.details.frequency)
     : null;
   const message = input.details.message ? String(input.details.message) : null;
-  const cardholderName =
-    input.card?.cardholderName ||
-    `${input.donor.firstName} ${input.donor.lastName}`;
+  const cardholderName = `${input.donor.firstName} ${input.donor.lastName}`;
+  const detailsPayload = {
+    ...input.details,
+    ...(stripePaymentIntentId
+      ? { stripePaymentIntentId, stripeSubscriptionId }
+      : {}),
+  };
 
   const inserted = await sql`
     INSERT INTO donations (
       reference_id, type, status, org_slug, org_name, amount, currency, frequency,
       first_name, last_name, email, phone, message, details_json,
       card_last4, card_brand, card_exp_month, card_exp_year, cardholder_name,
-      ip_address, city, region, country, country_code, latitude, longitude
+      ip_address, city, region, country, country_code, latitude, longitude,
+      confirmed_at
     ) VALUES (
-      ${referenceId}, ${input.type}, 'pending', ${orgSlug}, ${orgName}, ${amount}, 'USD', ${frequency},
-      ${input.donor.firstName}, ${input.donor.lastName}, ${input.donor.email}, ${input.donor.phone || null}, ${message}, ${JSON.stringify(input.details)},
+      ${referenceId}, ${input.type}, ${paymentStatus}, ${orgSlug}, ${orgName}, ${amount}, 'USD', ${frequency},
+      ${input.donor.firstName}, ${input.donor.lastName}, ${input.donor.email}, ${input.donor.phone || null}, ${message}, ${JSON.stringify(detailsPayload)},
       ${cardMeta?.last4 ?? null}, ${cardMeta?.brand ?? null}, ${cardMeta?.expMonth ?? null}, ${cardMeta?.expYear ?? null}, ${cardholderName},
-      ${ip}, ${geo.city}, ${geo.region}, ${geo.country}, ${geo.countryCode}, ${geo.latitude}, ${geo.longitude}
+      ${ip}, ${geo.city}, ${geo.region}, ${geo.country}, ${geo.countryCode}, ${geo.latitude}, ${geo.longitude},
+      ${paymentStatus === "confirmed" ? new Date().toISOString() : null}
     )
     RETURNING id
   `;
@@ -106,7 +125,24 @@ export async function createDonation(
     emailType: "thank_you",
   });
 
-  return { referenceId, donationId };
+  if (paymentStatus === "confirmed") {
+    const confirmation = confirmationEmail({
+      donorName,
+      amount,
+      orgName,
+      referenceId,
+      type: input.type,
+    });
+    await sendEmail({
+      to: input.donor.email,
+      subject: confirmation.subject,
+      html: confirmation.html,
+      donationId,
+      emailType: "confirmation",
+    });
+  }
+
+  return { referenceId, donationId, status: paymentStatus };
 }
 
 export async function getDonationById(

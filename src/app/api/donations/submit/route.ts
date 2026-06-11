@@ -15,13 +15,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { referenceId } = await createDonation(body, request);
+    if (body.type === "cash" && !body.stripePaymentIntentId) {
+      return NextResponse.json(
+        { error: "Card payment must be completed through Stripe" },
+        { status: 400 }
+      );
+    }
+
+    const { referenceId, status } = await createDonation(body, request);
 
     return NextResponse.json({
       success: true,
       referenceId,
+      status,
       message:
-        "Your donation has been received. A thank-you email has been sent. You will receive a confirmation email once our team verifies receipt of funds.",
+        body.type === "cash" && status === "confirmed"
+          ? "Your payment was successful. Thank-you and confirmation emails have been sent."
+          : "Your donation has been received. A thank-you email has been sent. You will receive a confirmation email once our team verifies receipt of funds.",
       conversionPolicy: "immediate_usd_liquidation",
       estimatedSettlement:
         body.type === "cash"

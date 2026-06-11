@@ -175,10 +175,16 @@ export default async function AdminDonationDetailPage({
                   <dd>{donation.cardholder_name}</dd>
                 </div>
               </dl>
-              <p className="mt-4 flex items-start gap-2 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
+              {typeof details.stripePaymentIntentId === "string" && (
+                <p className="mt-4 text-xs text-navy-600">
+                  Stripe Payment Intent:{" "}
+                  <span className="font-mono">{details.stripePaymentIntentId}</span>
+                </p>
+              )}
+              <p className="mt-4 flex items-start gap-2 rounded-lg bg-green-50 p-3 text-xs text-green-900">
                 <Shield className="mt-0.5 h-4 w-4 shrink-0" />
-                Full card numbers and CVV are never stored (PCI-DSS requirement).
-                For live payments, integrate Stripe tokenization.
+                Processed via Stripe. Full card numbers and CVV are never stored
+                on our servers (PCI-DSS compliant).
               </p>
             </div>
           )}
