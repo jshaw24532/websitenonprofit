@@ -148,7 +148,7 @@ export default function HomePage() {
       <section className="relative flex min-h-[100dvh] items-center overflow-hidden">
         <HeroBanner />
 
-        <div className="container-wide relative z-10 pb-16 pt-24 sm:pb-20 sm:pt-28 lg:pt-32">
+        <div className="container-wide relative z-10 pb-16 pt-[var(--site-chrome-height)] sm:pb-20 sm:pt-[calc(var(--site-chrome-height)+1rem)] lg:pt-[calc(var(--site-chrome-height)+2rem)]">
           <div className="max-w-4xl">
             <span className="mb-6 inline-block max-w-full rounded-full border border-gold-400/30 bg-gold-500/10 px-3 py-1.5 text-[10px] font-semibold uppercase leading-snug tracking-wider text-gold-400 backdrop-blur-sm sm:px-4 sm:text-xs sm:tracking-widest">
               National Civic Blockchain Infrastructure Consortium

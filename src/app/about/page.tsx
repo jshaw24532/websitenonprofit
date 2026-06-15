@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Heart, Users, Truck } from "lucide-react";
+import { ArrowRight, Heart, Users, Truck, BadgeCheck, ExternalLink } from "lucide-react";
 import PageHero from "@/components/PageHero";
-import { siteConfig } from "@/lib/config";
+import { siteConfig, nonprofit } from "@/lib/config";
 import { siteImages } from "@/lib/images";
 
 export const metadata: Metadata = {
@@ -88,6 +88,76 @@ export default function AboutPage() {
                 <p className="text-sm text-navy-600">{description}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="tax-exempt-status"
+        className="section-padding scroll-mt-28 border-t border-navy-100 bg-white"
+      >
+        <div className="container-wide">
+          <div className="mx-auto max-w-3xl">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-gold-200 bg-gold-50 px-4 py-2 text-sm font-semibold text-gold-700">
+              <BadgeCheck className="h-4 w-4" />
+              Active {nonprofit.status} Tax-Exempt Status
+            </div>
+            <h2 className="heading-section mb-4">Our Nonprofit Status</h2>
+            <p className="text-lead mb-6">
+              {nonprofit.legalName} is recognized by the Internal Revenue Service
+              as an active {nonprofit.status} tax-exempt charitable organization.
+              Your support helps fund community food outreach and civic
+              infrastructure programs nationwide.
+            </p>
+            <dl className="mb-8 grid gap-4 rounded-2xl border border-navy-100 bg-navy-50 p-6 sm:grid-cols-2">
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wider text-navy-500">
+                  Legal name
+                </dt>
+                <dd className="mt-1 font-medium text-navy-900">
+                  {nonprofit.legalName}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wider text-navy-500">
+                  Federal tax status
+                </dt>
+                <dd className="mt-1 font-medium text-navy-900">
+                  {nonprofit.status} — Tax-exempt
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wider text-navy-500">
+                  EIN
+                </dt>
+                <dd className="mt-1 font-mono font-medium text-navy-900">
+                  {nonprofit.ein}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wider text-navy-500">
+                  Donations
+                </dt>
+                <dd className="mt-1 text-navy-800">
+                  {nonprofit.taxDeductibleNote}
+                </dd>
+              </div>
+            </dl>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href={nonprofit.irsVerifyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
+                Verify on IRS.gov
+                <ExternalLink className="h-4 w-4" />
+              </a>
+              <Link href="/donate/on-3rd-outreach" className="btn-outline">
+                Make a tax-deductible gift
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

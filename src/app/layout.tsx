@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display, Source_Serif_4 } from "next/font/google";
 import ConditionalSiteChrome from "@/components/ConditionalSiteChrome";
-import { siteConfig } from "@/lib/config";
+import { siteConfig, nonprofit } from "@/lib/config";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -59,6 +59,21 @@ export default function RootLayout({
       className={`${dmSans.variable} ${playfair.variable} ${sourceSerif.variable}`}
     >
       <body className="font-sans">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "NGO",
+              name: nonprofit.legalName,
+              alternateName: siteConfig.shortName,
+              url: process.env.NEXT_PUBLIC_SITE_URL || "https://on3rdoutreach.org",
+              taxID: nonprofit.ein,
+              nonprofitStatus: nonprofit.status,
+              description: siteConfig.description,
+            }),
+          }}
+        />
         <ConditionalSiteChrome>{children}</ConditionalSiteChrome>
       </body>
     </html>

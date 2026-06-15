@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Mail, Phone, MapPin } from "lucide-react";
-import { siteConfig, footerNav } from "@/lib/config";
+import { Mail, Phone, MapPin, BadgeCheck } from "lucide-react";
+import { siteConfig, footerNav, nonprofit } from "@/lib/config";
 import SiteLogo from "@/components/SiteLogo";
 
 export default function Footer() {
@@ -9,6 +9,10 @@ export default function Footer() {
       <div className="container-wide section-padding pb-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
+            <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-gold-500/40 bg-gold-500/10 px-3 py-1 text-xs font-semibold text-gold-400">
+              <BadgeCheck className="h-3.5 w-3.5" />
+              Active {nonprofit.status} · Tax-Exempt
+            </p>
             <div className="mb-4">
               <SiteLogo
                 size="sm"
@@ -99,10 +103,18 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-navy-800 pt-8 md:flex-row">
-          <p className="text-sm text-navy-400">
-            &copy; {new Date().getFullYear()} {siteConfig.name}. All rights
-            reserved.
-          </p>
+          <div className="text-center md:text-left">
+            <p className="text-sm text-navy-400">
+              &copy; {new Date().getFullYear()} {siteConfig.name}. All rights
+              reserved.
+            </p>
+            <p className="mt-1 text-xs text-navy-500">
+              {nonprofit.status} tax-exempt nonprofit · EIN {nonprofit.ein} ·{" "}
+              <Link href="/about#tax-exempt-status" className="hover:text-gold-400">
+                Tax-exempt status
+              </Link>
+            </p>
+          </div>
           <div className="flex gap-6 text-sm text-navy-400">
             <Link href="/privacy" className="hover:text-white">
               Privacy Policy

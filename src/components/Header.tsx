@@ -7,6 +7,7 @@ import { Menu, X, ChevronDown, Heart, Calculator } from "lucide-react";
 import { mainNav, governmentNav } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import SiteLogo from "@/components/SiteLogo";
+import TaxExemptTopBar from "@/components/TaxExemptTopBar";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -30,14 +31,16 @@ export default function Header() {
   const useSolidHeader = scrolled || isGovernment || isDonate;
 
   return (
-    <header
-      className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-300",
-        useSolidHeader
-          ? "bg-white/95 shadow-md backdrop-blur-md"
-          : "bg-transparent"
-      )}
-    >
+    <div className="fixed top-0 z-50 w-full">
+      <TaxExemptTopBar />
+      <header
+        className={cn(
+          "w-full transition-all duration-300",
+          useSolidHeader
+            ? "bg-white/95 shadow-md backdrop-blur-md"
+            : "bg-transparent"
+        )}
+      >
       <div className="container-wide">
         <div className="flex h-16 items-center justify-between lg:h-20">
           <div className="min-w-0 max-w-none">
@@ -217,6 +220,7 @@ export default function Header() {
           </div>
         </div>
       )}
-    </header>
+      </header>
+    </div>
   );
 }

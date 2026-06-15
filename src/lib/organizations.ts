@@ -1,4 +1,5 @@
 import type { DonationMethodId } from "./donations";
+import { nonprofit } from "./config";
 import {
   impactCategories,
   type ImpactArea,
@@ -47,7 +48,7 @@ export const organizations: Organization[] = [
       "Mobile food outreach delivering nutritious meals and essential resources to underserved communities nationwide.",
     mission:
       "No one should go hungry. Our service trucks bring fresh meals, dignity, and hope directly to neighborhoods in need.",
-    ein: "XX-XXXXXXX",
+    ein: nonprofit.ein,
     impactAreas: ["Hunger", "Community Service", "Disaster Response"],
     methods: allMethods,
     popular: true,

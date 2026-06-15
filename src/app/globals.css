@@ -12,6 +12,18 @@
     @apply bg-white text-navy-900 antialiased overflow-x-hidden;
   }
 
+  :root {
+    --site-topbar-height: 2.25rem;
+    --site-header-height: 4rem;
+    --site-chrome-height: calc(var(--site-topbar-height) + var(--site-header-height));
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --site-header-height: 5rem;
+    }
+  }
+
   ::selection {
     @apply bg-gold-500/30 text-navy-950;
   }
