@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, Heart } from "lucide-react";
+import { Menu, X, ChevronDown, Heart, Calculator } from "lucide-react";
 import { mainNav, governmentNav } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import SiteLogo from "@/components/SiteLogo";
@@ -126,6 +126,18 @@ export default function Header() {
 
           <div className="hidden items-center gap-3 lg:flex">
             <Link
+              href="/government/savings-calculator"
+              className={cn(
+                "inline-flex items-center gap-2 rounded-lg border-2 px-4 py-2.5 text-sm font-semibold transition-all",
+                useSolidHeader
+                  ? "border-navy-800 text-navy-800 hover:bg-navy-800 hover:text-white"
+                  : "border-white/40 text-white hover:border-white/60 hover:bg-white/10"
+              )}
+            >
+              <Calculator className="h-4 w-4" />
+              Calculator
+            </Link>
+            <Link
               href="/donate"
               className={cn(
                 "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all",
@@ -186,10 +198,17 @@ export default function Header() {
               ))}
             </div>
 
-            <div className="border-t border-navy-100 pt-3">
+            <div className="space-y-2 border-t border-navy-100 px-4 pt-3">
+              <Link
+                href="/government/savings-calculator"
+                className="btn-outline flex w-full"
+              >
+                <Calculator className="h-4 w-4" />
+                Savings Calculator
+              </Link>
               <Link
                 href="/donate"
-                className="btn-primary mx-4 mt-2 w-[calc(100%-2rem)]"
+                className="btn-primary w-full"
               >
                 <Heart className="h-4 w-4" />
                 Donate Now
