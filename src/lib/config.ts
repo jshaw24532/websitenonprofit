@@ -51,6 +51,11 @@ export const governmentNav = {
       description: "Real-world civic deployment initiatives",
     },
     {
+      label: "Savings Calculator",
+      href: "/government/savings-calculator",
+      description: "Instant infrastructure savings estimates for cities",
+    },
+    {
       label: "Civic Technology Research Labs",
       href: "/government/research-labs",
       description: "Innovation and research collaborations",

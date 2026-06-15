@@ -150,6 +150,25 @@ button.btn-primary:focus,
   }
 }
 
+@media print {
+  header,
+  footer,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .savings-pitch-deck,
+  .savings-calculator {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #bcccdc;
+  }
+
+  body {
+    background: white;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
