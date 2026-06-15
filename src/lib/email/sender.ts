@@ -37,7 +37,7 @@ export async function sendEmail(options: {
   emailType?: EmailType;
 }) {
   const from =
-    process.env.SMTP_FROM || "donations@on3rdoutreach.org";
+    process.env.SMTP_FROM || "info@on3rdoutreach.org";
   const transport = getTransporter();
   let status = "logged";
 

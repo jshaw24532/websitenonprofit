@@ -8,9 +8,9 @@ export const siteConfig = {
   description:
     "A first-of-its-kind collaborative initiative bringing together enterprise blockchain companies, municipal governments, universities, and infrastructure specialists to modernize public infrastructure through blockchain technology.",
   email: "info@on3rdoutreach.org",
-  consortiumEmail: "consortium@on3rdoutreach.org",
-  phone: "(555) 123-4567",
-  address: "123 Civic Center Drive, Suite 400, Washington, DC 20001",
+  consortiumEmail: "info@on3rdoutreach.org",
+  phone: "(872) 710-0657",
+  address: "11057 South Fairfield Ave., Chicago, Illinois 60655",
 };
 
 /** Public 501(c)(3) / tax-exempt details shown on the site */
