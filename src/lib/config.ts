@@ -3,10 +3,16 @@ export const siteConfig = {
   shortName: "On 3rd Outreach",
   consortiumName: "Municipal Blockchain & Infrastructure Consortium",
   consortiumShort: "MBIC",
+  /** Primary hook for city officials, grant funders, and homepage hero */
+  valueProposition:
+    "We save governments up to 65% on infrastructure projects at zero out-of-pocket cost.",
   tagline:
-    "Building the Next Generation of Civic Infrastructure, Government Transparency, and Enterprise Blockchain Leadership",
+    "Municipal infrastructure savings at zero out-of-pocket cost—powered by blockchain transparency.",
   description:
-    "A first-of-its-kind collaborative initiative bringing together enterprise blockchain companies, municipal governments, universities, and infrastructure specialists to modernize public infrastructure through blockchain technology.",
+    "On 3rd Outreach saves governments up to 65% on infrastructure projects at zero out-of-pocket cost. A 501(c)(3) nonprofit combining municipal blockchain modernization with mobile community food outreach.",
+  missionStory:
+    "Our affordable food outreach trucks are the heart of why we exist—delivering meals, dignity, and hope to underserved communities, sustained by the infrastructure savings we create for cities.",
+  logoSubtitle: "Municipal Infrastructure Savings",
   email: "info@on3rdoutreach.org",
   consortiumEmail: "info@on3rdoutreach.org",
   phone: "(872) 710-0657",

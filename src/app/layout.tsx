@@ -30,7 +30,7 @@ export const viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.consortiumName} | ${siteConfig.shortName}`,
+    default: `${siteConfig.shortName} | Municipal Infrastructure Savings`,
     template: `%s | ${siteConfig.shortName}`,
   },
   description: siteConfig.description,

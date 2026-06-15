@@ -26,7 +26,7 @@ export default function SiteLogo({
   href = "/",
   textClassName,
   subtitleClassName,
-  subtitle = "National Civic Infrastructure",
+  subtitle = siteConfig.logoSubtitle,
 }: SiteLogoProps) {
   const { img, text, imgClass } = sizeMap[size];
 

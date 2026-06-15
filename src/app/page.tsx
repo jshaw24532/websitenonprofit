@@ -16,10 +16,12 @@ import {
   Scale,
   Lock,
   Megaphone,
+  Calculator,
 } from "lucide-react";
 import CTABanner from "@/components/CTABanner";
 import { siteConfig } from "@/lib/config";
 import { siteImages } from "@/lib/images";
+import { BLOCKCHAIN_SAVINGS_RATE } from "@/lib/savings-model";
 
 const stakeholders = [
   "Enterprise blockchain companies",
@@ -151,37 +153,102 @@ export default function HomePage() {
         <div className="container-wide relative z-10 pb-16 pt-[var(--site-chrome-height)] sm:pb-20 sm:pt-[calc(var(--site-chrome-height)+1rem)] lg:pt-[calc(var(--site-chrome-height)+2rem)]">
           <div className="max-w-4xl">
             <span className="mb-6 inline-block max-w-full rounded-full border border-gold-400/30 bg-gold-500/10 px-3 py-1.5 text-[10px] font-semibold uppercase leading-snug tracking-wider text-gold-400 backdrop-blur-sm sm:px-4 sm:text-xs sm:tracking-widest">
-              National Civic Blockchain Infrastructure Consortium
+              For Cities, Counties &amp; Grant Funders
             </span>
 
             <h1 className="heading-display mb-6 !text-white">
-              Municipal Blockchain &{" "}
-              <span className="gradient-text">Infrastructure Consortium</span>
+              We save governments up to{" "}
+              <span className="gradient-text">
+                {Math.round(BLOCKCHAIN_SAVINGS_RATE * 100)}%
+              </span>{" "}
+              on infrastructure projects at{" "}
+              <span className="text-white">zero out-of-pocket cost</span>.
             </h1>
 
-            <p className="mb-4 text-lg font-medium text-white/90 sm:text-xl md:text-2xl">
+            <p className="mb-4 text-lg font-medium text-white/90 sm:text-xl">
               {siteConfig.tagline}
             </p>
 
             <p className="text-lead mb-8 max-w-3xl text-navy-200">
-              The future of public infrastructure funding, municipal
-              transparency, workforce development, and civic technology
-              innovation is being built now.
+              Through the {siteConfig.consortiumName}, On 3rd Outreach
+              delivers blockchain-enabled transparency and cost reduction for
+              roads, water systems, schools, and public buildings. Our service
+              fee is paid only from documented savings—never from your agency
+              budget.
             </p>
 
+            <div className="mb-10 flex flex-wrap gap-3">
+              {[
+                `${Math.round(BLOCKCHAIN_SAVINGS_RATE * 100)}% project savings`,
+                "$0 upfront agency cost",
+                "501(c)(3) tax-exempt partner",
+              ].map((item) => (
+                <span
+                  key={item}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm sm:text-sm"
+                >
+                  <CheckCircle2 className="h-3.5 w-3.5 text-gold-400" />
+                  {item}
+                </span>
+              ))}
+            </div>
+
             <div className="flex flex-wrap gap-4">
-              <Link href="/government/executive-overview" className="btn-primary">
-                Explore the Consortium
-                <ArrowRight className="h-4 w-4" />
+              <Link
+                href="/government/savings-calculator"
+                className="btn-primary"
+              >
+                <Calculator className="h-4 w-4" />
+                Calculate City Savings
               </Link>
-              <Link href="/government/founding-partners" className="btn-secondary">
-                Founding Partnership Opportunities
+              <Link href="/government/contact" className="btn-secondary">
+                Schedule a City Briefing
               </Link>
             </div>
           </div>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
+      </section>
+
+      {/* Mission: food outreach as the "why" */}
+      <section className="section-padding border-b border-navy-100 bg-white">
+        <div className="container-wide">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-xl lg:order-2">
+              <Image
+                src={siteImages.communityOutreach}
+                alt="On 3rd Outreach mobile food service truck serving communities"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="lg:order-1">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-gold-600">
+                The Why Behind It All
+              </p>
+              <h2 className="heading-section mb-6">
+                Community Food Outreach, Funded by Civic Savings
+              </h2>
+              <p className="text-lead mb-6">{siteConfig.missionStory}</p>
+              <p className="mb-8 text-navy-600 leading-relaxed">
+                When cities save on infrastructure, communities win twice:
+                modernized public systems and mobile food outreach that reaches
+                neighborhoods in need—led by {siteConfig.shortName}, a
+                501(c)(3) nonprofit.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/donate/on-3rd-outreach" className="btn-primary">
+                  Support Food Outreach
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link href="/about" className="btn-outline">
+                  Our Story
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Section 1: The Vision */}
@@ -536,14 +603,16 @@ export default function HomePage() {
           <div className="grid items-center gap-12 rounded-2xl bg-gradient-to-br from-navy-50 to-gold-50 p-8 md:p-12 lg:grid-cols-2">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-gold-600">
-                Support Our Mission
+                The Heart of Our Work
               </p>
               <h2 className="heading-section mb-4">
-                Fuel Community Outreach & Civic Innovation
+                Fuel Community Food Outreach
               </h2>
               <p className="text-lead mb-6">
-                Give by card, cryptocurrency, stock, or donor-advised fund. All
-                non-cash gifts convert to cash automatically upon receipt.
+                Infrastructure savings power our mission on the ground—mobile
+                food trucks delivering nutritious meals to underserved
+                communities. Give by card, crypto, stock, or donor-advised
+                fund.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link href="/donate" className="btn-primary">

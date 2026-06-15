@@ -17,7 +17,7 @@ export default function AboutPage() {
       <PageHero
         badge="About Our Organization"
         title={siteConfig.name}
-        description="A 501(c)(3) nonprofit organization dedicated to community food outreach and advancing national civic blockchain infrastructure."
+        description="A 501(c)(3) nonprofit that saves governments up to 65% on infrastructure at zero upfront cost—and reinvests in mobile community food outreach."
       />
 
       <section className="section-padding bg-white">

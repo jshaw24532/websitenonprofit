@@ -1,22 +1,22 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import PageHero from "@/components/PageHero";
-import { governmentNav } from "@/lib/config";
+import { governmentNav, siteConfig } from "@/lib/config";
 
 export default function GovernmentIndexPage() {
   return (
     <>
       <PageHero
-        badge="National Civic Blockchain Infrastructure Consortium"
-        title="Government & Infrastructure"
-        description="The Municipal Blockchain & Infrastructure Consortium represents a national civic infrastructure movement — bringing together enterprise blockchain companies, municipal governments, universities, and infrastructure specialists."
+        badge="For Cities & Municipal Leaders"
+        title="Government & Infrastructure Savings"
+        description={siteConfig.valueProposition}
         cta={{
-          label: "Executive Overview",
-          href: "/government/executive-overview",
+          label: "Calculate Your Savings",
+          href: "/government/savings-calculator",
         }}
         secondaryCta={{
-          label: "Founding Partners",
-          href: "/government/founding-partners",
+          label: "Executive Overview",
+          href: "/government/executive-overview",
         }}
       />
 
