@@ -1,6 +1,6 @@
 /** Fixed rates for the On 3rd Outreach municipal savings model */
-export const BLOCKCHAIN_SAVINGS_RATE = 0.65;
-export const OUTREACH_FEE_RATE = 0.35;
+export const BLOCKCHAIN_SAVINGS_RATE = 0.63;
+export const OUTREACH_FEE_RATE = 0.37;
 
 export const DEFAULT_PROJECT_BUDGET = 3_000_000;
 

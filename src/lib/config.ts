@@ -5,11 +5,11 @@ export const siteConfig = {
   consortiumShort: "MBIC",
   /** Primary hook for city officials, grant funders, and homepage hero */
   valueProposition:
-    "We save governments up to 65% on infrastructure projects at zero out-of-pocket cost.",
+    "We save governments up to 63% on infrastructure projects at zero out-of-pocket cost.",
   tagline:
     "Municipal infrastructure savings at zero out-of-pocket cost—powered by blockchain transparency.",
   description:
-    "On 3rd Outreach saves governments up to 65% on infrastructure projects at zero out-of-pocket cost. A 501(c)(3) nonprofit combining municipal blockchain modernization with mobile community food outreach.",
+    "On 3rd Outreach saves governments up to 63% on infrastructure projects at zero out-of-pocket cost. A 501(c)(3) nonprofit combining municipal blockchain modernization with mobile community food outreach.",
   missionStory:
     "Our affordable food outreach trucks are the heart of why we exist—delivering meals, dignity, and hope to underserved communities, sustained by the infrastructure savings we create for cities.",
   logoSubtitle: "Municipal Infrastructure Savings",

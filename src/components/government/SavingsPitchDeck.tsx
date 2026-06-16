@@ -21,8 +21,8 @@ const example = calculateSavings(DEFAULT_PROJECT_BUDGET);
 const pitchPoints = [
   {
     icon: TrendingDown,
-    title: "Up to 65% Cost Reduction",
-    body: "Blockchain-enabled municipal infrastructure delivery cuts traditional project costs by up to 65% through transparent procurement, automated compliance, and reduced administrative overhead.",
+    title: "Up to 63% Cost Reduction",
+    body: "Blockchain-enabled municipal infrastructure delivery cuts traditional project costs by up to 63% through transparent procurement, automated compliance, and reduced administrative overhead.",
   },
   {
     icon: Wallet,
@@ -31,8 +31,8 @@ const pitchPoints = [
   },
   {
     icon: Shield,
-    title: "35% Philanthropic Service Fee",
-    body: "A fixed 35% fee applies solely to gross savings generated—not to your original budget. The remaining 65% of savings flows back to your community.",
+    title: "37% Philanthropic Service Fee",
+    body: "A fixed 37% fee applies solely to gross savings generated—not to your original budget. The remaining 63% of savings flows back to your community.",
   },
   {
     icon: Building2,
@@ -162,11 +162,11 @@ export default function SavingsPitchDeck() {
         </p>
         <div className="flex flex-wrap items-center gap-2 font-mono text-sm text-navy-800 sm:text-base">
           <span className="rounded-lg bg-white px-3 py-2 shadow-sm">
-            Gross Savings = Budget × 65%
+            Gross Savings = Budget × 63%
           </span>
           <span className="text-navy-400">→</span>
           <span className="rounded-lg bg-white px-3 py-2 shadow-sm">
-            Fee = Gross Savings × 35%
+            Fee = Gross Savings × 37%
           </span>
           <span className="text-navy-400">→</span>
           <span className="rounded-lg bg-white px-3 py-2 shadow-sm">
