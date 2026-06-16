@@ -7,7 +7,7 @@ export default function GovernmentIndexPage() {
   return (
     <>
       <PageHero
-        badge="For Cities & Municipal Leaders"
+        badge="For City, State and Federal Agencies"
         title="Government & Infrastructure Savings"
         description={siteConfig.valueProposition}
         cta={{

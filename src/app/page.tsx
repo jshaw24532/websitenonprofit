@@ -153,7 +153,7 @@ export default function HomePage() {
         <div className="container-wide relative z-10 pb-16 pt-[var(--site-chrome-height)] sm:pb-20 sm:pt-[calc(var(--site-chrome-height)+1rem)] lg:pt-[calc(var(--site-chrome-height)+2rem)]">
           <div className="max-w-4xl">
             <span className="mb-6 inline-block max-w-full rounded-full border border-gold-400/30 bg-gold-500/10 px-3 py-1.5 text-[10px] font-semibold uppercase leading-snug tracking-wider text-gold-400 backdrop-blur-sm sm:px-4 sm:text-xs sm:tracking-widest">
-              For Cities, Counties &amp; Grant Funders
+              For City, State and Federal Agencies
             </span>
 
             <h1 className="heading-display mb-6 !text-white">
