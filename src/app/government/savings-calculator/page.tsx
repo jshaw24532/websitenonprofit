@@ -10,7 +10,7 @@ import CTABanner from "@/components/CTABanner";
 export const metadata: Metadata = {
   title: "Municipal Savings Calculator",
   description:
-    "Calculate how much your city can save on infrastructure projects with blockchain—up to 63% cost reduction. See instant estimates with the On 3rd Outreach savings model.",
+    "Calculate how much your city can save on infrastructure projects with blockchain—up to 65% cost reduction. See instant estimates with the On 3rd Outreach savings model.",
 };
 
 export default function SavingsCalculatorPage() {
@@ -20,7 +20,7 @@ export default function SavingsCalculatorPage() {
         badge="Government & Infrastructure"
         title="Municipal Infrastructure Savings Calculator"
         subtitle="On 3rd Outreach — Reclaiming Infrastructure"
-        description="Plug in your project budget and see instant savings. Our fixed model delivers up to 63% cost reduction for government agencies—with a transparent 37% philanthropic service fee applied only to gross savings."
+        description="Plug in your project budget and see instant savings. Our fixed model delivers up to 65% cost reduction for government agencies—with a transparent 37% philanthropic service fee applied only to gross savings."
         cta={{ label: "View $3M Example", href: "#savings-pitch" }}
         secondaryCta={{ label: "Try Calculator", href: "#calculator" }}
       />

@@ -21,8 +21,8 @@ const example = calculateSavings(DEFAULT_PROJECT_BUDGET);
 const pitchPoints = [
   {
     icon: TrendingDown,
-    title: "Up to 63% Cost Reduction",
-    body: "Blockchain-enabled municipal infrastructure delivery cuts traditional project costs by up to 63% through transparent procurement, automated compliance, and reduced administrative overhead.",
+    title: "Up to 65% Cost Reduction",
+    body: "Blockchain-enabled municipal infrastructure delivery cuts traditional project costs by up to 65% through transparent procurement, automated compliance, and reduced administrative overhead.",
   },
   {
     icon: Wallet,
