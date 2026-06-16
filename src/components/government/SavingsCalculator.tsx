@@ -288,7 +288,7 @@ export default function SavingsCalculator() {
           <p className="text-sm leading-relaxed text-navy-200">
             Our fee is paid exclusively from the savings we generate. If we
             don&apos;t save you money, you pay nothing. No fees. No retainers.
-            No budget hit.
+            No budget risk.
           </p>
         </div>
 
