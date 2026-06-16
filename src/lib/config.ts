@@ -24,11 +24,11 @@ export const nonprofit = {
   legalName: "On 3rd Affordable Food Outreach Service Truck",
   status: "501(c)(3)" as const,
   isTaxExempt: true,
-  ein: "XX-XXXXXXX",
+  ein: "99-4957292",
   taxDeductibleNote:
     "Donations are tax-deductible to the extent allowed by U.S. law.",
-  /** IRS Tax Exempt Organization Search — replace EIN when you have the real number */
-  irsVerifyUrl: "https://apps.irs.gov/app/eos/",
+  irsVerifyUrl:
+    "https://apps.irs.gov/app/eos/details/?ein=994957292&country=US&deductibility=all",
 };
 
 export const mainNav = [

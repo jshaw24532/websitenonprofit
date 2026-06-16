@@ -6,6 +6,8 @@
  * upon receipt (24/7), reducing price volatility and simplifying nonprofit accounting.
  */
 
+import { nonprofit } from "./config";
+
 export type DonationMethodId = "cash" | "crypto" | "stock" | "daf";
 
 export const instantConversionPolicy = {
@@ -65,7 +67,7 @@ export const stockDonationInfo = {
   dtcNumber: "0226",
   accountNumber: "PLACEHOLDER-ACCOUNT",
   accountName: "On 3rd Affordable Food Outreach Service Truck",
-  ein: "XX-XXXXXXX",
+  ein: nonprofit.ein,
   supportedTypes: [
     "Publicly traded stocks",
     "Mutual fund shares",
