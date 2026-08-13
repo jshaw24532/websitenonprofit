@@ -21,8 +21,8 @@ const example = calculateSavings(DEFAULT_PROJECT_BUDGET);
 const pitchPoints = [
   {
     icon: TrendingDown,
-    title: "Up to 65% Cost Reduction",
-    body: "Blockchain-enabled municipal infrastructure delivery cuts traditional project costs by up to 65% through transparent procurement, automated compliance, and reduced administrative overhead.",
+    title: "Up to 25% Cost Reduction",
+    body: "Blockchain-enabled municipal infrastructure delivery cuts traditional project costs by up to 25% through transparent procurement, automated compliance, and reduced administrative overhead.",
   },
   {
     icon: Wallet,
@@ -162,7 +162,7 @@ export default function SavingsPitchDeck() {
         </p>
         <div className="flex flex-wrap items-center gap-2 font-mono text-sm text-navy-800 sm:text-base">
           <span className="rounded-lg bg-white px-3 py-2 shadow-sm">
-            Gross Savings = Budget × 63%
+            Gross Savings = Budget × 25%
           </span>
           <span className="text-navy-400">→</span>
           <span className="rounded-lg bg-white px-3 py-2 shadow-sm">
